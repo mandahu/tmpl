@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <h1>{%@("你好世界")%}</h1>
+    {%
+    //仅支持单行注释
+    //1.变量声明,函数调用
+        //字面量类型包含 string,int,bool,float,null,array,map
+        var str="字符串"
+        var rawStr=`\ad\nn""`
+        var intNum,floatNum=10,3.14
+        var strArr=string["b","c","a","d"]
+        var strArr1=string["b","c","a","e"]
+        var strArr2=string["b","c","a","d"]
+        var Arr=[1,"a","2",int[1,2,3]]
+        var j={"key":0,"key1":strArr}
+        @(strings.Join(strArr,"===="))//只是函数名一样而已，但不是直接调用go的需要自行封装
+        @(arrays.Sort(strArr))
+        @(strArr)//排序后的 ["a","b","c","d"]//还有其他函数自行看源码
+        @(strArr==strArr1)//支持数组和map的深度比较
+        @(strArr==strArr2)
+    //2.输出@
+        @(str,rawStr,"\n")
+        @(strArr,Arr)
+    //3.条件
+        if len(Arr)!=0{
+            @(Arr[1],Arr[1:len(Arr)])
+        }else if len(j){
+            @(j["key"])
+        }
+        for i range(0,10,2){ //range(init,cond,step) range(100,1,-2)
+            @(printf("<h1>%d</h1>",i),"\n")
+        }
+        for k,v range j{
+            @("key is:",k,"\tvalue is:",v,"value type is:\t",type(v),"\n")
+        }
+    //4.操作符及作用域
+        //操作符支持+,-,*,/,%,||,&&,!,+,-,++,--
+        if false||true {
+            var value=""||0||"你好"
+            @(value)
+        }
+      //  if value{  value不存在
+      //      @("aa")
+      //  }
+
+    //5.全局属性及函数及模板嵌套
+        global.include_a="include0"
+        global.include_b="incldue1"
+        func test(a,b){
+            return a+b
+        }
+        //所有全局变量或者函数的使用，必须在使用前声明
+        //模板嵌套的深度最高5层。
+       #"include0.html"("传递的参数1",2)
+       #"include1.html"()
+    //6.扩展ctx和函数库
+        //template.NewTemplate("example.html", reader, ctx, buf)
+        //参数1为模板名
+        //参数2为接口类型自己去实现即可主要为了适应各种读取的方法例如文件，数据库，缓存。
+        //参数3ctx
+        //此处的ctx可以自行封装可以是结构体，可以是数据具体怎么使用随你
+        //也可以使用template.NewContext(r, w)产生的
+        //里面有一些封装好的属性和方法。例如redirect等等
+        //注意在模板中任何一个地方使用return 引擎将停止渲染
+        //例如 var aaa=map[string]interface{}{
+        //    "a":1,
+        //    "b":"2"
+        //}
+        //template.NewTemplate("example.html", reader, aaa, buf)
+        //模板代码中ctx["a"]就能获取值1
+
+        //函数库存在于builtin_func.go 自己想加什么加什么，加的时候注意参数的一些类型，不想用直接清空即可
+        //目前只使用了go的int float64 bool string nil,[]interface,[]string,[]bool,[]int,[]float,map[string]interface{}
+        //这个模板只是为了解决我们目前项目需求所编写,不等同于通用模板引擎
+        //代码中没有注释，没有测试用例,
+    %}
