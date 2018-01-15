@@ -21,8 +21,8 @@ type template struct {
 	check   map[string]bool
 }
 
-func NewTemplate(name string, reader inputReader, c interface{}, writer io.Writer) *template {
-	return &template{name: name, writer: writer, reader: reader, context: c}
+func NewTemplate(name string, reader inputReader, writer io.Writer) *template {
+	return &template{name: name, writer: writer, reader: reader}
 }
 func (t *template) Compile() error {
 	parser, err := newParser(t.name, "{%", "%}", t.reader)
@@ -52,9 +52,10 @@ func (t *template) checkIdent(s *scope, i ...*ident) {
 		}
 	}
 }
-func (t *template) Exec() error {
+func (t *template) Exec(data interface{}) error {
 	t.check = make(map[string]bool)
 	t.size = 3 << 20
+	t.context=data
 	t.scope = newTopScope(t.context)
 	t.executeWriteByte()
 	defer closeScope(t.scope)
