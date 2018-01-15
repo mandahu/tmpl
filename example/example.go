@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"io/ioutil"
 	"net/http"
-	"template"
+
+	"github.com/mandahu/tmpl"
 )
 
 func main() {
@@ -12,15 +13,15 @@ func main() {
 		return ioutil.ReadFile(str)
 	}
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		ctx := template.NewContext(r, w)
 		buf := bytes.NewBufferString("")
-		t := template.NewTemplate("example.html", reader, ctx, buf)
+		t := template.NewTemplate("example/example.html", reader, buf)
 		if err := t.Compile(); err != nil {
 			w.WriteHeader(500)
 			w.Write([]byte(err.Error()))
 			return
 		}
-		if err := t.Exec(); err != nil {
+		ctx := template.NewContext(r, w)
+		if err := t.Exec(ctx); err != nil {
 			w.WriteHeader(500)
 			w.Write([]byte(err.Error()))
 			return

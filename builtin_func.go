@@ -3,7 +3,7 @@ package template
 import (
 	"fmt"
 	"reflect"
-	"template/bulitin"
+	"github.com/mandahu/tmpl/bulitin"
 )
 
 func length(i interface{}) int {
@@ -47,7 +47,6 @@ func BuildFunc() map[string]interface{} {
 	funcs["regexp"] = bulitin.RegExp{}
 	funcs["url"] = bulitin.URL{}
 	funcs["json"] = bulitin.JSON{}
-	funcs["http"] = bulitin.Http{}
 	funcs["crypto"] = bulitin.Crypto{}
 	funcs["html"] = bulitin.HTML{}
 	return funcs

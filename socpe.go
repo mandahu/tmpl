@@ -6,7 +6,7 @@ type scope struct {
 	objects map[string]*ident
 }
 
-var funtions =make(map[string]*ident)
+var Functions map[string]*ident
 
 func newScope(s *scope) *scope {
 	if s == nil || s.global == nil {
@@ -26,11 +26,6 @@ func newIncludeScope(c interface{}, global map[string]*ident) *scope {
 	scope.objects["ctx"] = &ident{pos: 0, name: "ctx", canset: false, data: c}
 	scope.global = global
 	return scope
-}
-func (s *scope)SetFuncs(funcs map[string]interface{})  {
-	for k, v := range funcs {
-		funtions[k] = &ident{pos: 0, name: k, canset: false, data: v}
-	}
 }
 func (s *scope) isExist(name string) (*ident, bool) {
 	if s == nil {
@@ -66,9 +61,15 @@ func (s *scope) insertGlobal(ident ...*ident) {
 }
 func clone() map[string]*ident {
 	c := make(map[string]*ident)
-	for k, v := range funtions {
+	for k, v := range Functions {
 		c[k] = v
 	}
 	return c
 }
-
+func init() {
+	fns := BuildFunc()
+	Functions = make(map[string]*ident)
+	for k, v := range fns {
+		Functions[k] = &ident{pos: 0, name: k, canset: false, data: v}
+	}
+}

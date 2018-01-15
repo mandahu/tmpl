@@ -56,7 +56,7 @@ func (t *template) Exec(data interface{}) error {
 	t.check = make(map[string]bool)
 	t.size = 3 << 20
 	t.context=data
-	t.scope = newTopScope(t.context)
+	t.scope = newTopScope(data)
 	t.executeWriteByte()
 	defer closeScope(t.scope)
 	return t.err
