@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-    <h1>{%@("你好世界")%}</h1>
-    {%
-    //仅支持单行注释
-    //1.变量声明,函数调用
+{%
+
+    //1.注释:仅支持单行注释
+    //2.变量声明,函数调用
         //字面量类型包含 string,int,bool,float,null,array,map
         var str="字符串"
         var rawStr=`\ad\nn""`
@@ -56,26 +49,26 @@
         }
         //所有全局变量或者函数的使用，必须在使用前声明
         //模板嵌套的深度最高5层。
-       #"include0.html"("传递的参数1",2)
-       #"include1.html"()
+       #"example/include0.html"("传递的参数1",2)
+       #"example/include1.html"()
     //6.扩展ctx和函数库
         //template.NewTemplate("example.html", reader, ctx, buf)
         //参数1为模板名
-        //参数2为接口类型自己去实现即可主要为了适应各种读取的方法例如文件，数据库，缓存。
-        //参数3ctx
-        //此处的ctx可以自行封装可以是结构体，可以是数据具体怎么使用随你
+        //参数2为接口类型,自己去实现即可主要为了适应各种读取的方法例如文件，数据库，缓存。
+        //参数3ctx,此处的ctx可以自行封装可以是结构体，可以是数据具体怎么使用随你
         //也可以使用template.NewContext(r, w)产生的
+        //例如 代码中@(ctx.Query["test"]), 请求http://127.0.0.1?msg=123 则输出123 其他同理，可以参考context文件
         //里面有一些封装好的属性和方法。例如redirect等等
         //注意在模板中任何一个地方使用return 引擎将停止渲染
         //例如 var aaa=map[string]interface{}{
         //    "a":1,
         //    "b":"2"
         //}
-        //template.NewTemplate("example.html", reader, aaa, buf)
+        //template.NewTemplate("example/example.html", reader, aaa, buf)
         //模板代码中ctx["a"]就能获取值1
 
         //函数库存在于builtin_func.go 自己想加什么加什么，加的时候注意参数的一些类型，不想用直接清空即可
         //目前只使用了go的int float64 bool string nil,[]interface,[]string,[]bool,[]int,[]float,map[string]interface{}
         //这个模板只是为了解决我们目前项目需求所编写,不等同于通用模板引擎
-        //代码中没有注释，没有测试用例,
+        //代码中没有注释，没有测试用例,有设置最大渲染size,超过则报错.
     %}

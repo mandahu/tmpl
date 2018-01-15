@@ -76,37 +76,13 @@ func (c *Context) set(req *http.Request, res http.ResponseWriter) {
 func (c *Context) SetHeader(k, v string) {
 	c.res.Header().Set(k, v)
 }
-func (c *Context) SetCookie(name, value string, expires int, secure, httpOnly bool) {
-	path := c.req.Header.Get("aw-original-uri")
-	domain := c.req.Header.Get("aw-original-host")
-	u, _ := url.QueryUnescape(path)
-	cookie := http.Cookie{
-		Name:     name,
-		Value:    url.QueryEscape(value),
-		Path:     u,
-		Expires:  time.Now().Add(time.Duration(expires) * time.Second),
-		Domain:   domain,
-		Secure:   secure,   //为true时 除非使用ssl和https否则则无法保存，
-		HttpOnly: httpOnly, //为true时 JavaScript和xhr以及feth.request不能访问
-	}
-	if ck := cookie.String(); ck != "" {
-		c.res.Header().Add("Set-Cookie", ck)
-	}
-}
+
 func (c *Context) Redirect(code int, location string) string {
 	http.Redirect(c.res, c.req, location, code)
 	return ""
 }
 func clientIp(req *http.Request) string {
-	clientIP := strings.TrimSpace(req.Header.Get("leonid-real-ip"))
-	if len(clientIP) > 0 {
-		return clientIP
-	}
-	clientIP = strings.TrimSpace(req.Header.Get("ali-cdn-real-ip"))
-	if len(clientIP) > 0 {
-		return clientIP
-	}
-	clientIP = req.Header.Get("X-Forwarded-For")
+	clientIP := req.Header.Get("X-Forwarded-For")
 	if index := strings.IndexByte(clientIP, ','); index >= 0 {
 		clientIP = clientIP[0:index]
 	}
