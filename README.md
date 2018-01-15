@@ -2,7 +2,8 @@
 # init
 go get github.com/mandahu/tmpl
 ```
-  func main() {
+//具体参考example中的例子即可。
+  func main() {
 	var reader = func(str string) ([]byte, error) {
 		return ioutil.ReadFile(str)
 	}
