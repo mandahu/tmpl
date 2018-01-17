@@ -4,9 +4,7 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
-	"net/url"
 	"strings"
-	"time"
 )
 
 type Context struct {
