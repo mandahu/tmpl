@@ -1,6 +1,5 @@
 # go 模板引擎
 ```
-mandahu<63004668@qq.com.com>
 wuzhonghua <snoopyxdy@gmail.com>
 yourenyouyu<2300738809@qq.com>
 The Mozilla License
